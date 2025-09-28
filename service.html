@@ -27,6 +27,66 @@
       margin-bottom: 1rem;
       display: inline-block;
     }
+    .bank-carousel {
+      margin-top: 2rem;
+      overflow: hidden;
+      position: relative;
+      background: #fff;
+      padding: 1rem 0;
+    }
+    .bank-carousel::before,
+    .bank-carousel::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      width: 50px;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .bank-carousel::before {
+      left: 0;
+      background: linear-gradient(to right, #fff 80%, transparent);
+    }
+    .bank-carousel::after {
+      right: 0;
+      background: linear-gradient(to left, #fff 80%, transparent);
+    }
+    .bank-logos {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      animation: scroll 30s linear infinite;
+    }
+    .bank-logos:hover {
+      animation-play-state: paused;
+    }
+    .bank-logo {
+      height: 40px;
+      width: auto;
+      margin: 0;
+      filter: none;
+      opacity: 0.9;
+      transition: opacity 0.3s ease, transform 0.3s;
+      background: transparent;
+      border-radius: 6px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      object-fit: contain;
+      display: block;
+    }
+    .bank-logo:hover {
+      opacity: 1;
+      transform: scale(1.05);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    }
+    @keyframes scroll {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
   </style>
 </head>
 <body>
@@ -71,6 +131,92 @@
     </div>
     <h1 class="display-5 fw-bold">Visa and Mastercard Solutions</h1>
     <p class="lead mb-0">Experience the freedom of all your cards at hand.</p>
+    
+    <!-- Bank Logos Carousel -->
+    <div class="bank-carousel">
+      <div class="bank-logos">
+        <script>
+          // List of banks
+          const banks = [
+            { name: "Wells Fargo", domain: "wellsfargo.com" },
+            { name: "Goldman Sachs", domain: "goldmansachs.com" },
+            { name: "HSBC", domain: "hsbc.com" },
+            { name: "Barclays", domain: "barclays.com" },
+            { name: "BNP Paribas", domain: "bnpparibas.com" },
+            { name: "Commerzbank", domain: "commerzbank.com" },
+            { name: "UBS", domain: "ubs.com" },
+            { name: "Credit Suisse", domain: "credit-suisse.com" },
+            { name: "ING", domain: "ing.com" },
+            { name: "Rabobank", domain: "rabobank.com" },
+            { name: "UniCredit", domain: "unicreditgroup.eu" },
+            { name: "Banco Santander", domain: "santander.com" },
+            { name: "BBVA", domain: "bbva.com" },
+            { name: "CaixaBank", domain: "caixabank.com" },
+            { name: "Nordea", domain: "nordea.com" },
+            { name: "Danske Bank", domain: "danskebank.com" },
+            { name: "Swedbank", domain: "swedbank.com" },
+            { name: "SEB", domain: "sebgroup.com" },
+            { name: "Handelsbanken", domain: "handelsbanken.com" },
+            { name: "KBC Group", domain: "kbc.com" },
+            { name: "ABN AMRO", domain: "abnamro.com" }
+          ];
+
+          // For seamless loop, duplicate the array
+          const allBanks = banks.concat(banks);
+
+          // Render bank logos
+          document.addEventListener("DOMContentLoaded", function() {
+            const bankLogosDiv = document.querySelector('.bank-logos');
+            if (bankLogosDiv) {
+              // Render all bank logos (doubled for seamless loop)
+              bankLogosDiv.innerHTML = allBanks.map(bank =>
+                `<img src="https://logo.clearbit.com/${bank.domain}?size=80" alt="${bank.name}" class="bank-logo" style="background:#fff;">`
+              ).join('');
+
+              // Make the carousel circular by animating horizontal scroll
+              let scrollAmount = 0;
+              const logoWidth = 90; // Approximate width (including margin)
+              const totalLogos = allBanks.length;
+              const scrollStep = 1; // px per frame
+              const delay = 16; // ms per frame (~60fps)
+
+              // Set styles for smooth horizontal scrolling
+              bankLogosDiv.style.display = "flex";
+              bankLogosDiv.style.overflow = "hidden";
+              bankLogosDiv.style.whiteSpace = "nowrap";
+              bankLogosDiv.parentElement.style.overflow = "hidden";
+
+              // Animate scroll with seamless looping by appending new logo as one goes off screen
+              function animateCarousel() {
+                scrollAmount += scrollStep;
+                bankLogosDiv.scrollLeft = scrollAmount;
+
+                // If the first logo is fully out of view, move it to the end
+                const firstLogo = bankLogosDiv.firstElementChild;
+                if (firstLogo) {
+                  const firstLogoRect = firstLogo.getBoundingClientRect();
+                  const parentRect = bankLogosDiv.parentElement.getBoundingClientRect();
+                  if (firstLogoRect.right < parentRect.left + 1) {
+                    // Move the first logo to the end
+                    bankLogosDiv.appendChild(firstLogo);
+                    // Adjust scrollAmount to account for the moved logo
+                    scrollAmount -= firstLogo.offsetWidth;
+                    bankLogosDiv.scrollLeft = scrollAmount;
+                  }
+                }
+              }
+
+              // Ensure the container is wide enough for scrolling
+              bankLogosDiv.parentElement.style.width = "100%";
+              bankLogosDiv.style.width = (logoWidth * totalLogos) + "px";
+
+              // Start animation
+              requestAnimationFrame(animateCarousel);
+            }
+          });
+        </script>
+       </div>
+    </div>
   </div>
 
   <!-- Description Body -->
