@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Cards</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: #f8fafc;
+    }
+    .card-list {
+      margin-top: 2rem;
+    }
+    .credit-card {
+      width: 350px;
+      aspect-ratio: 16 / 10;
+      margin: 1.5rem auto;
+      color: #fff;
+      border-radius: 1.1rem;
+      box-shadow: 0 6px 32px rgba(44,62,80,0.18);
+      padding: 2rem 1.5rem 1.5rem 1.5rem;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+      transition: box-shadow 0.2s;
+    }
+    .credit-card .card-logo {
+      width: 54px;
+      position: absolute;
+      top: 1.2rem;
+      right: 1.2rem;
+      z-index: 2;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.18));
+    }
+    .credit-card .chip {
+      width: 44px;
+      height: 32px;
+      background: linear-gradient(135deg, #e0e0e0 60%, #bdbdbd 100%);
+      border-radius: 8px;
+      margin-bottom: 1.2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+      z-index: 2;
+    }
+    .credit-card .card-number {
+      font-size: 1.25rem;
+      letter-spacing: 2.5px;
+      margin-bottom: 1.1rem;
+      font-family: 'OCR A Std', 'Consolas', monospace;
+      z-index: 2;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.18);
+    }
+    .credit-card .card-details {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.97rem;
+      z-index: 2;
+    }
+    .credit-card .card-holder,
+    .credit-card .card-expiry {
+      text-transform: uppercase;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.13);
+    }
+    .credit-card .label {
+      font-size: 0.7rem;
+      color: #e0e0e0;
+      opacity: 0.85;
+      margin-bottom: 0.1rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-weight: 400;
+    }
+    /* Visa style: solid blue */
+    .credit-card.visa {
+      background: #004A99;
+    }
+    .credit-card.visa::before {
+      content: "";
+      position: absolute;
+      left: -40px;
+      top: -40px;
+      width: 120px;
+      height: 120px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 50%;
+      z-index: 0;
+    }
+    /* MasterCard style: solid deep red with orange accent */
+    .credit-card.mastercard {
+      background: #b71c1c;
+    }
+    .credit-card.mastercard::before {
+      content: "";
+      position: absolute;
+      right: -40px;
+      bottom: -40px;
+      width: 120px;
+      height: 120px;
+      background: rgba(255,152,0,0.13);
+      border-radius: 50%;
+      z-index: 0;
+    }
+    @media (max-width: 400px) {
+      .credit-card {
+        width: 98vw;
+        min-width: unset;
+        padding: 1.2rem 0.7rem 1rem 0.7rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="fw-bold mb-0">My Credit Cards</h2>
+      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCardModal">
+        <i class="bi bi-plus-lg"></i> Add New Card
+      </button>
+    </div>
+    <div id="cardList" class="card-list">
+      <!-- Cards will be rendered here -->
+    </div>
+  </div>
+
+  <!-- Add Card Modal -->
+  <div class="modal fade" id="addCardModal" tabindex="-1" aria-labelledby="addCardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="addCardForm" autocomplete="off">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addCardModalLabel">Add New Credit Card</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <div class="mb-3">
+                <label for="cardNumber" class="form-label">Card Number</label>
+                <input type="text" maxlength="19" class="form-control" id="cardNumber" placeholder="1234 5678 9012 3456" required pattern="\d{4} \d{4} \d{4} \d{4}">
+              </div>
+              <div class="mb-3">
+                <label for="cardHolder" class="form-label">Cardholder Name</label>
+                <input type="text" class="form-control" id="cardHolder" placeholder="Full Name" required>
+              </div>
+              <div class="row">
+                <div class="col-6 mb-3">
+                  <label for="expiry" class="form-label">Expiry Date</label>
+                  <input type="text" maxlength="5" class="form-control" id="expiry" placeholder="MM/YY" required pattern="(0[1-9]|1[0-2])\/\d{2}">
+                </div>
+                <div class="col-6 mb-3">
+                  <label for="cardType" class="form-label">Card Type</label>
+                  <select class="form-select" id="cardType" required>
+                    <option value="">Select</option>
+                    <option value="visa">Visa</option>
+                    <option value="mastercard">Mastercard</option>
+                  </select>
+                </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Add Card</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS and icons -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <script>
+    // Demo: store cards in memory
+    let cards = JSON.parse(localStorage.getItem('cards') || '[]');
+
+    function getCardLogo(type) {
+      if (type === 'visa') {
+        return '<img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa" class="card-logo">';
+      } else if (type === 'mastercard') {
+        return '<img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png" alt="Mastercard" class="card-logo">';
+      }
+      return '';
+    }
+
+    function maskCardNumber(number) {
+      // Show only last 4 digits
+      let clean = number.replace(/\D/g, '');
+      if (clean.length < 16) return number;
+      return clean.replace(/.(?=.{4})/g, '*').replace(/(.{4})/g, '$1 ').trim();
+    }
+
+    function renderCards() {
+      const cardList = document.getElementById('cardList');
+      if (cards.length === 0) {
+        cardList.innerHTML = '<div class="text-center text-muted py-5">No cards added yet.</div>';
+        return;
+      }
+      cardList.innerHTML = cards.map((card, idx) => `
+        <div class="credit-card ${card.type}" tabindex="0" data-card-index="${idx}">
+          <div class="chip"></div>
+          ${getCardLogo(card.type)}
+          <div class="card-number">${maskCardNumber(card.number)}</div>
+          <div class="card-details">
+            <div>
+              <div class="label">Card Holder</div>
+              <div class="card-holder">${card.holder}</div>
+            </div>
+            <div>
+              <div class="label">Expires</div>
+              <div class="card-expiry">${card.expiry}</div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      // Add click event listeners to each card
+      Array.from(cardList.getElementsByClassName('credit-card')).forEach(cardElem => {
+        cardElem.addEventListener('click', function() {
+          const idx = this.getAttribute('data-card-index');
+          const card = cards[idx];
+          // Show full card details in an alert (or you could use a modal for better UX)
+          alert(
+            `Card Type: ${card.type.charAt(0).toUpperCase() + card.type.slice(1)}\n` +
+            `Card Number: ${card.number}\n` +
+            `Card Holder: ${card.holder}\n` +
+            `Expiry: ${card.expiry}`
+          );
+        });
+      });
+
+    // Add "X" icon to each card and handle remove
+    cardList.innerHTML = cards.map((card, idx) => `
+      <div class="credit-card ${card.type}" tabindex="0" data-card-index="${idx}" style="position: relative;">
+        <button type="button" class="card-remove-btn" data-remove-index="${idx}" style="
+          position: absolute;
+          bottom: 8px;
+          right: 8px;
+          z-index: 2;
+          color: #dc3545;
+          background: rgba(255,255,255,0.85);
+          border: 2px solid transparent;
+          border-radius: 50%;
+          width: 32px;
+          height: 32px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: border-color 0.2s, background 0.2s, color 0.2s;
+          box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+          padding: 0;
+        "
+        onmouseover="this.style.borderColor='#dc3545'; this.style.background='#fff'; this.style.color='#fff'; this.style.backgroundColor='#dc3545';"
+        onmouseout="this.style.borderColor='transparent'; this.style.background='rgba(255,255,255,0.85)'; this.style.color='#dc3545'; this.style.backgroundColor='';"
+        aria-label="Remove card"
+        >
+          <i class="bi bi-x-lg"></i>
+        </button>
+        <div class="chip"></div>
+        ${getCardLogo(card.type)}
+        <div class="card-number">${maskCardNumber(card.number)}</div>
+        <div class="card-details">
+          <div>
+            <div class="label">Card Holder</div>
+            <div class="card-holder">${card.holder}</div>
+          </div>
+          <div>
+            <div class="label">Expires</div>
+            <div class="card-expiry">${card.expiry}</div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    // Add click event listeners to each card
+    Array.from(cardList.getElementsByClassName('credit-card')).forEach(cardElem => {
+      cardElem.addEventListener('click', function(e) {
+        // Prevent card click if "X" was clicked
+        if (e.target.closest('.card-remove-btn')) return;
+        const idx = this.getAttribute('data-card-index');
+        const card = cards[idx];
+        // Show full card details in an alert (or you could use a modal for better UX)
+        alert(
+          `Card Type: ${card.type.charAt(0).toUpperCase() + card.type.slice(1)}\n` +
+          `Card Number: ${card.number}\n` +
+          `Card Holder: ${card.holder}\n` +
+          `Expiry: ${card.expiry}`
+        );
+      });
+    });
+
+    // Add click event listeners to each "X" icon for removing cards
+    Array.from(cardList.getElementsByClassName('card-remove-btn')).forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation(); // Prevent triggering card click
+        const idx = parseInt(this.getAttribute('data-remove-index'));
+        if (!isNaN(idx)) {
+          if (confirm('Are you sure you want to remove this card?')) {
+            cards.splice(idx, 1);
+            localStorage.setItem('cards', JSON.stringify(cards));
+            renderCards();
+          }
+        }
+      });
+    });
+    }
+
+    document.getElementById('addCardForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const number = document.getElementById('cardNumber').value.trim();
+      const holder = document.getElementById('cardHolder').value.trim();
+      const expiry = document.getElementById('expiry').value.trim();
+      const type = document.getElementById('cardType').value;
+
+      // Basic validation
+      if (!/^\d{4} \d{4} \d{4} \d{4}$/.test(number)) {
+        alert('Please enter a valid 16-digit card number (format: 1234 5678 9012 3456).');
+        return;
+      }
+      if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(expiry)) {
+        alert('Please enter a valid expiry date (MM/YY).');
+        return;
+      }
+      if (!holder) {
+        alert('Please enter the cardholder name.');
+        return;
+      }
+      if (!type) {
+        alert('Please select a card type.');
+        return;
+      }
+
+      cards.push({ number, holder, expiry, type });
+      localStorage.setItem('cards', JSON.stringify(cards));
+      renderCards();
+
+      // Reset form and close modal
+      this.reset();
+      const modal = bootstrap.Modal.getInstance(document.getElementById('addCardModal'));
+      modal.hide();
+    });
+
+    // Format card number input as user types
+    document.getElementById('cardNumber').addEventListener('input', function(e) {
+      let value = this.value.replace(/\D/g, '').slice(0,16);
+      let formatted = value.replace(/(.{4})/g, '$1 ').trim();
+      this.value = formatted;
+    });
+
+    // Format expiry input as MM/YY
+    document.getElementById('expiry').addEventListener('input', function(e) {
+      let value = this.value.replace(/\D/g, '').slice(0,4);
+      if (value.length > 2) {
+        value = value.slice(0,2) + '/' + value.slice(2);
+      }
+      this.value = value;
+    });
+
+    // Initial render
+    renderCards();
+  </script>
+</body>
+</html>
+
+
+
