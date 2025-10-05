@@ -352,6 +352,31 @@
       } else {
         recaptchaError.style.display = 'none';
       }
+      e.preventDefault();
+      // You can add authentication logic here
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      // For demonstration, just close the modal and show a message, then redirect
+      const modal = bootstrap.Modal.getInstance(document.getElementById('signInModal'));
+      modal.hide();
+      document.getElementById('output').textContent = `Signed in as: ${username}`;
+      setTimeout(function() {
+        window.location.href = "cards.html";
+      }, 1000); // Redirect after 1 second
+    });
+  </script>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <script>
+    document.getElementById('signInForm').addEventListener('submit', function(e) {
+      var recaptchaResponse = grecaptcha.getResponse();
+      var recaptchaError = document.getElementById('recaptchaError');
+      if (!recaptchaResponse) {
+        e.preventDefault();
+        recaptchaError.style.display = 'block';
+        return false;
+      } else {
+        recaptchaError.style.display = 'none';
+      }
       // The rest of the sign-in logic is handled in the main script block below
     });
   </script>
