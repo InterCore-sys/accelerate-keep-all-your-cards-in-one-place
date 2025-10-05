@@ -283,6 +283,14 @@
                             var err = document.getElementById('dobError');
                             if (err) err.remove();
                           }
+
+                          // Save credentials locally (note: storing plaintext passwords is insecure)
+                          try {
+                            const username = document.getElementById('username').value;
+                            const password = document.getElementById('password').value;                            
+                            localStorage.setItem('acc_username', username);
+                            localStorage.setItem('acc_password', password);
+                          } catch (e) {}
                         }
                       ">Submit Application</button>
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -316,21 +324,21 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-              <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" id="username" required>
+            <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              <input type="text" class="form-control" id="username" required>
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" class="form-control" id="password" required>
+            </div>
+            <div class="mb-3">
+              <!-- Google reCAPTCHA widget -->
+              <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
+              <div id="recaptchaError" class="invalid-feedback" style="display:none;">
+                Please verify that you are not a robot.
               </div>
-              <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" required>
-              </div>
-              <div class="mb-3">
-                <!-- Google reCAPTCHA widget -->
-                <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
-                <div id="recaptchaError" class="invalid-feedback" style="display:none;">
-                  Please verify that you are not a robot.
-                </div>
-              </div>
+            </div>
           </div>
           <div class="modal-footer">
             <button type="submit" class="btn btn-primary">Sign In</button>
@@ -356,6 +364,7 @@
       // You can add authentication logic here
       const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
+
       // For demonstration, just close the modal and show a message, then redirect
       const modal = bootstrap.Modal.getInstance(document.getElementById('signInModal'));
       modal.hide();
@@ -389,6 +398,7 @@
       // You can add authentication logic here
       const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
+
       // For demonstration, just close the modal and show a message
       const modal = bootstrap.Modal.getInstance(document.getElementById('signInModal'));
       modal.hide();
