@@ -9,9 +9,7 @@
     .banner {
       background: linear-gradient(90deg, #ff512f 0%, #dd2476 50%, #24c6dc 100%);
       color: #fff;
-      padding: 3rem 1rem;
       text-align: center;
-      border-radius: 0 0 1rem 1rem;
       margin-bottom: 2rem;
     }
     .card-icon {
@@ -33,6 +31,21 @@
       position: relative;
       background: #fff;
       padding: 1rem 0;
+    }
+    .bank-logos {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      animation: scroll 20s linear infinite;
+      will-change: transform;
+    }
+    @keyframes scroll {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
     }
     .bank-carousel::before,
     .bank-carousel::after {
@@ -56,10 +69,6 @@
       display: flex;
       align-items: center;
       gap: 40px;
-      animation: scroll 30s linear infinite;
-    }
-    .bank-logos:hover {
-      animation-play-state: paused;
     }
     .bank-logo {
       height: 40px;
@@ -161,22 +170,27 @@
             { name: "ABN AMRO", domain: "abnamro.com" }
           ];
 
-          // For seamless loop, duplicate the array
-          const allBanks = banks.concat(banks);
+          const localBanks = [
+            { name: "Bank of America", localPath: "logo-bank-of-america.png" },
+            { name: "Chase", localPath: "Chase-Bank-Logo.png" }
+          ];
+
+          const allBanks = banks;
 
           // Render bank logos
           document.addEventListener("DOMContentLoaded", function() {
             const bankLogosDiv = document.querySelector('.bank-logos');
             if (bankLogosDiv) {
               // Render all bank logos (doubled for seamless loop)
-              bankLogosDiv.innerHTML = allBanks.map(bank =>
+              banksHTML = allBanks.map(bank =>
                 `<img src="https://logo.clearbit.com/${bank.domain}?size=80" alt="${bank.name}" class="bank-logo" style="background:#fff;">`
-              ).join('');
+              ).concat(localBanks.map(bank => `<img src="${bank.localPath}" alt="${bank.name}" class="bank-logo" style="background:#fff;">`)).join('');
+              bankLogosDiv.innerHTML = banksHTML + banksHTML
 
               // Make the carousel circular by animating horizontal scroll
               let scrollAmount = 0;
               const logoWidth = 90; // Approximate width (including margin)
-              const totalLogos = allBanks.length;
+              const totalLogos = allBanks.length * 2;
               const scrollStep = 1; // px per frame
               const delay = 16; // ms per frame (~60fps)
 
@@ -186,32 +200,9 @@
               bankLogosDiv.style.whiteSpace = "nowrap";
               bankLogosDiv.parentElement.style.overflow = "hidden";
 
-              // Animate scroll with seamless looping by appending new logo as one goes off screen
-              function animateCarousel() {
-                scrollAmount += scrollStep;
-                bankLogosDiv.scrollLeft = scrollAmount;
-
-                // If the first logo is fully out of view, move it to the end
-                const firstLogo = bankLogosDiv.firstElementChild;
-                if (firstLogo) {
-                  const firstLogoRect = firstLogo.getBoundingClientRect();
-                  const parentRect = bankLogosDiv.parentElement.getBoundingClientRect();
-                  if (firstLogoRect.right < parentRect.left + 1) {
-                    // Move the first logo to the end
-                    bankLogosDiv.appendChild(firstLogo);
-                    // Adjust scrollAmount to account for the moved logo
-                    scrollAmount -= firstLogo.offsetWidth;
-                    bankLogosDiv.scrollLeft = scrollAmount;
-                  }
-                }
-              }
-
               // Ensure the container is wide enough for scrolling
               bankLogosDiv.parentElement.style.width = "100%";
               bankLogosDiv.style.width = (logoWidth * totalLogos) + "px";
-
-              // Start animation
-              requestAnimationFrame(animateCarousel);
             }
           });
         </script>
