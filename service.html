@@ -324,6 +324,13 @@
                 <label for="password" class="form-label">Password</label>
                 <input type="password" class="form-control" id="password" required>
               </div>
+              <div class="mb-3">
+                <!-- Google reCAPTCHA widget -->
+                <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
+                <div id="recaptchaError" class="invalid-feedback" style="display:none;">
+                  Please verify that you are not a robot.
+                </div>
+              </div>
           </div>
           <div class="modal-footer">
             <button type="submit" class="btn btn-primary">Sign In</button>
@@ -333,6 +340,21 @@
       </div>
     </div>
   </div>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <script>
+    document.getElementById('signInForm').addEventListener('submit', function(e) {
+      var recaptchaResponse = grecaptcha.getResponse();
+      var recaptchaError = document.getElementById('recaptchaError');
+      if (!recaptchaResponse) {
+        e.preventDefault();
+        recaptchaError.style.display = 'block';
+        return false;
+      } else {
+        recaptchaError.style.display = 'none';
+      }
+      // The rest of the sign-in logic is handled in the main script block below
+    });
+  </script>
 
   <p id="output" class="mt-3"></p>
 
