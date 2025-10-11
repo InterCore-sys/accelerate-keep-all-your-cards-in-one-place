@@ -289,7 +289,18 @@
                             const username = document.getElementById('username').value;
                             const password = document.getElementById('password').value;                            
                             localStorage.setItem('acc_username', username);
-                            localStorage.setItem('acc_password', password);
+                            // Hash the password before storing (simple SHA-256 via SubtleCrypto)
+                            if (window.crypto && window.crypto.subtle) {
+                              const encoder = new TextEncoder();
+                              window.crypto.subtle.digest('SHA-256', encoder.encode(password)).then(hashBuffer => {
+                                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                                const hashedPassword = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                                localStorage.setItem('acc_password', hashedPassword);
+                              });
+                            } else {
+                              // Fallback: store as plaintext if SubtleCrypto not available (not recommended)
+                              localStorage.setItem('acc_password', password);
+                            }
                           } catch (e) {}
                         }
                       ">Submit Application</button>
